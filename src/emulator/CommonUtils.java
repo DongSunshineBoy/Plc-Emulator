@@ -46,8 +46,10 @@ public class CommonUtils {
             throw new BaseException(ExceptionEnum.NOT_FOUND_FORMATION);
         }
 
+        String functionName = getFunctionName(functionParams);
+
         List<String> params = new LinkedList<>();
-        if (!functionParams.contains(",")) {
+        if (!functionParams.contains(",") && functionName.equals(RANDOM)) {
             String[] firstParams = functionParams.split("\\(");
 
             String[] split = firstParams[firstParams.length - 1].split("\\)");
@@ -55,11 +57,19 @@ public class CommonUtils {
             return params;
         }
 
+        if (!functionParams.contains(",") && functionName.equalsIgnoreCase(USER)) {
+            throw new BaseException(ExceptionEnum.NOT_AVAILABLE_PARAMS_FORMATION);
+        }
+
+        if (!functionParams.contains(",") && functionName.equalsIgnoreCase(RAMP)) {
+            throw new BaseException(ExceptionEnum.NOT_AVAILABLE_PARAMS_FORMATION);
+        }
+
         String[] split = functionParams.split(",");
         String[] firstParams = split[0].split("\\(");
 
         params.add(firstParams[1]);
-        String functionName = firstParams[0].toLowerCase();
+
 
         params.addAll(Arrays.asList(split).subList(1, split.length - 1));
 

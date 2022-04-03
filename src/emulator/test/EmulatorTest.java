@@ -2,6 +2,9 @@ package emulator.test;
 import emulator.AbstractTask;
 import emulator.EmulatorFactory;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 /**
  * @Author: wenTaoDong
  * @Date: 2022/3/30 03-30 20:48
@@ -10,111 +13,146 @@ import emulator.EmulatorFactory;
  */
 public class EmulatorTest {
 
-    private EmulatorFactory emulatorFactory = new EmulatorFactory();
-    private AbstractTask task;
+    private EmulatorFactory emulatorFactory = EmulatorFactory.getInstance();
 
-    public void testRandomNegative() {
+    private Executor executor = Executors.newFixedThreadPool(6);
+
+    public  void testRandomNegative() {
         String userParams = "random(1000,3.2,60.9)";
-        task = emulatorFactory.builder(userParams);
-        new Thread(()->{
-            while (true) {
-                Object value = task.getValue();
-                System.out.println("value = " + value);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        AbstractTask task = this.emulatorFactory.builder(userParams);
+        executor.execute(()->{
+//            synchronized (this) {
+                while (true) {
+                    Object value = task.getValue();
+                    System.out.println(task.getClass() + "value = " + value);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+//                }
             }
-        }).start();
+        });
+
     }
 
-    public void testRandomBoolean() {
+    public   void testRandomBoolean() {
+
         String userParams = "random(300)";
-        task = emulatorFactory.builder(userParams);
-        new Thread(()->{
-            while (true) {
-                Object value = task.getValue();
-                System.out.println("value = " + value);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        AbstractTask task = emulatorFactory.builder(userParams);
+        executor.execute(()->{
+//            synchronized (this) {
+                while (true) {
+                    Object value = task.getValue();
+                    System.out.println(task.getClass()+"value = " + value);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+//            }
+
+        });
+
     }
 
-    public void testRandomPositive() {
+    public   void testRandomPositive() {
+
         String userParams = "random(1000,5,100)";
-        task = emulatorFactory.builder(userParams);
-        new Thread(()->{
-            while (true) {
-                Object value = task.getValue();
-                System.out.println("value = " + value);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        AbstractTask task = emulatorFactory.builder(userParams);
+        executor.execute(()->{
+//            synchronized (this) {
+                while (true) {
+                    Object value = task.getValue();
+                    System.out.println(task.getClass().getName()+"value = " + value);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+//            }
+
+        });
+
     }
 
     public void testRAMPPositive() {
-        String userParams = "ramp(1000,3,60,2)";
-        task = emulatorFactory.builder(userParams);
-        new Thread(()->{
-            while (true) {
-                Object value = task.getValue();
-                System.out.println("value = " + value);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+        String userParams = "ramp(1000,32760,2,2)";
+        AbstractTask task = emulatorFactory.builder(userParams);
+        executor.execute(()->{
+//            synchronized (this) {
+                while (true) {
+                    Object value = task.getValue();
+                    System.out.println(value.getClass()+"value = " + value);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+//            }
+
+        });
+
     }
 
 
     public void testRAMPNegative() {
-        String userParams = "ramp(1000,3.3,60.8,3.0)";
-        task = emulatorFactory.builder(userParams);
-        new Thread(()->{
-            while (true) {
-                Object value = task.getValue();
-                System.out.println("value = " + value);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+        String userParams = "ramp(1000,3.3,60.8,3.088)";
+        AbstractTask task = emulatorFactory.builder(userParams);
+        executor.execute(()->{
+//            synchronized (this) {
+                while (true) {
+                    Object value = task.getValue();
+                    System.out.println(task.getClass().getName()+"value = " + value);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+
+//            }
+        });
     }
 
-
     public void testUserInput() {
-        String userParams = "user(1000,3,45,65,7,8,9,56,4,4,true, 123.543, \"world\", \"hello\")";
-        task = emulatorFactory.builder(userParams);
-        new Thread(()->{
-            while (true) {
-                Object value = task.getValue();
-                System.out.println("value = " + value.getClass());
-                System.out.println("value = " + value);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+        String userParams = "user(1000,3,45.2552522525211,65.2,7,856756756765765,9,56.5254,456756,true, 123.543, \"world\", \"hello\")";
+        AbstractTask task = emulatorFactory.builder(userParams);
+        executor.execute(()->{
+//            synchronized (this) {
+                while (true) {
+                    Object value = task.getValue();
+                    System.out.println(value.getClass()+"value = " + value);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+//                }
             }
-        }).start();
+
+        });
     }
 
     //不要直接在main方法中使用for循环测试，因为main方法的线程级别高，可能当启动的线程还没执行就会执行main所以会出现空指针
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         EmulatorTest emulatorTest = new EmulatorTest();
         emulatorTest.testUserInput();
+        Thread.sleep(1000);
+        emulatorTest.testRandomPositive();
+        Thread.sleep(1000);
+        emulatorTest.testRandomBoolean();
+        Thread.sleep(1000);
+        emulatorTest.testRandomNegative();
+        Thread.sleep(1000);
+        emulatorTest.testRAMPNegative();
+        Thread.sleep(1000);
+        emulatorTest.testRAMPPositive();
     }
 }

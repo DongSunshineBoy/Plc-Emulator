@@ -1,5 +1,7 @@
 package emulator;
 
+import java.text.NumberFormat;
+
 /**
  * @Author: wenTaoDong
  * @Date: 2022/3/29 03-29 21:03
@@ -14,7 +16,7 @@ public class Field {
     private  Object defaultValue;
     private volatile Object offset;
 
-    public Boolean getPositive() {
+    public boolean getPositive() {
         return isPositive;
     }
 

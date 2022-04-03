@@ -10,8 +10,8 @@ import java.util.List;
  */
 public abstract class AbstractEmulator {
 
-    public AbstractTask process(List<String> params){return  null;};
+    public AbstractTask process(List<Object> params){return  null;};
 
-    public AbstractTask createFiledTask(List<String> params){return null;};
+    public AbstractTask createFiledTask(List<Object> params){return null;};
 
 }

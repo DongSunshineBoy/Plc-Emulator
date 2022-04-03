@@ -9,13 +9,23 @@ import java.util.List;
  * @Version 1.0
  */
 public class EmulatorFactory {
+
     private AbstractEmulator abstractEmulator;
+
+    private static final EmulatorFactory EMULATOR_FACTORY = new EmulatorFactory();
 
     private final static String RANDOM = "random";
     private final static String RAMP = "ramp";
     private final static String USER = "user";
 
+    private EmulatorFactory(){}
+
+    public static EmulatorFactory getInstance() {
+        return EMULATOR_FACTORY;
+    }
+
     public AbstractTask builder(String userParams) {
+
         String functionName = CommonUtils.getFunctionName(userParams).toLowerCase();
 
         switch (functionName) {
@@ -29,13 +39,13 @@ public class EmulatorFactory {
                 this.abstractEmulator = new UserEmulator();
                 break;
             default:
-                throw new BaseException(ExceptionEnum.NOT_FOUND_FUNCTION_EXCEPTION);
+                throw new BaseException(ExceptionEnum.NOT_FOUND_FUNCTION_EXCEPTION, functionName);
         }
         return this.builderTask(userParams);
     }
 
     private AbstractTask builderTask(String userFunction) {
-        List<String> params = CommonUtils.processParams(userFunction);
+        List<Object> params = CommonUtils.processParams(userFunction);
         return this.abstractEmulator.createFiledTask(params);
     }
 

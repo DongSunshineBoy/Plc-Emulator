@@ -1,5 +1,6 @@
 package emulator;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -13,21 +14,21 @@ import java.util.concurrent.Executors;
 public class RAMPEmulator extends AbstractEmulator {
 
     @Override
-    public RAMFieldTask process(List<String> params) {
-        String interval = params.get(0);
-        String startValue = params.get(1);
-        String endValue = params.get(2);
-        String offset = params.get(3);
-        if (CommonUtils.isDouble(startValue)
-                || CommonUtils.isDouble(endValue)
-                || CommonUtils.isDouble(offset)) {
-            return processData(Double.parseDouble(startValue), Double.parseDouble(offset), Double.parseDouble(endValue), Integer.parseInt(interval), false);
+    public RAMFieldTask process(List<Object> params) {
+        Object interval = params.get(0);
+        Object startValue = params.get(1);
+        Object endValue = params.get(2);
+        Object offset = params.get(3);
+        if (startValue instanceof Double
+                || endValue instanceof Double
+                || offset instanceof Double) {
+            return processData(startValue, offset, endValue, Integer.valueOf(interval.toString()), false);
         }
-        return processData(Long.parseLong(startValue), Long.parseLong(offset), Long.parseLong(endValue), Integer.parseInt(interval), true);
+        return processData(startValue, offset, endValue, Integer.valueOf(interval.toString()), true);
     }
 
     @Override
-    public RAMFieldTask createFiledTask(List<String> params) {
+    public RAMFieldTask createFiledTask(List<Object> params) {
        return this.process(params);
     }
 
@@ -47,4 +48,5 @@ public class RAMPEmulator extends AbstractEmulator {
         executor.execute(randomFieldTask);
         return randomFieldTask;
     }
+
 }

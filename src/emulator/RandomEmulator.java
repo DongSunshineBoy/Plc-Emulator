@@ -13,30 +13,31 @@ import java.util.concurrent.Executors;
 public class RandomEmulator extends AbstractEmulator {
 
     @Override
-    public RandomFieldTask createFiledTask(List<String> fieldParams) {
+    public RandomFieldTask createFiledTask(List<Object> fieldParams) {
         return this.process(fieldParams);
     }
 
     @Override
-    public RandomFieldTask process(List<String> fieldParams) {
+    public RandomFieldTask process(List<Object> fieldParams) {
         if (fieldParams == null ) return null;
 
         if (fieldParams.size() == 1) {
-            String startValue = fieldParams.get(0);
-            return processData(Integer.parseInt(startValue), null, null, true, false);
+            Object startValue = fieldParams.get(0);
+            return processData(startValue, null, null, true, false);
         }else {
-            String interval = fieldParams.get(0);
-            String startValue = fieldParams.get(1);
-            String endValue = fieldParams.get(2);
-            if(CommonUtils.isDouble(startValue) || CommonUtils.isDouble(endValue)) {
-                return processData(Double.parseDouble(startValue), Double.parseDouble(endValue), Integer.parseInt(interval), false, false);
+            Object interval = fieldParams.get(0);
+            Object startValue = fieldParams.get(1);
+            Object endValue = fieldParams.get(2);
+            if(startValue instanceof Double || endValue instanceof Double) {
+                return processData(startValue, endValue, Integer.valueOf(interval.toString()), false, false);
             }
-            return processData(Integer.parseInt(startValue), Integer.parseInt(endValue), Integer.parseInt(interval), false, true);
+            return processData(startValue, endValue, Integer.valueOf(interval.toString()), false, true);
         }
     }
 
     private RandomFieldTask processData(Object startValue, Object endValue, Integer interval,
                                         Boolean isBooleanType, Boolean isPositive){
+
         Executor executor = Executors.newCachedThreadPool();
 
         RandomFieldTask randomFieldTask = new RandomFieldTask();
@@ -48,7 +49,7 @@ public class RandomEmulator extends AbstractEmulator {
             field.setPositive(isPositive);
             field.setValue(startValue);
         }else {
-            field.setInterval((Integer)startValue);
+            field.setInterval(Integer.valueOf(startValue.toString()));
             field.setValue(false);
         }
         randomFieldTask.setField(field);

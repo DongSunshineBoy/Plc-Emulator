@@ -49,13 +49,13 @@ public class RandomFieldTask extends Thread implements AbstractTask {
             Random random = new Random();
 
             if (isPositive) {
-                int max = (int) this.field.getEndValue();
-                int min = (int) this.field.getStartValue();
-                this.field.setValue((long)random.nextInt(max - min) + min);
+                Integer max = Integer.valueOf(this.field.getEndValue().toString());
+                Integer min = Integer.valueOf(this.field.getStartValue().toString());
+                this.field.setValue(random.nextInt(max - min) + min);
             }else {
-                double max = (double) this.field.getEndValue();
-                double min = (double) this.field.getStartValue();
-                this.field.setValue(((Double) min + random.nextDouble() * (max - min)));
+                Double max = Double.valueOf(this.field.getEndValue().toString());
+                Double min = Double.valueOf(this.field.getStartValue().toString());
+                this.field.setValue((min + random.nextDouble() * (max - min)));
             }
 
             try {

@@ -1,6 +1,5 @@
 package emulator;
 
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

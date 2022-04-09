@@ -2,13 +2,10 @@ package emulator;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.UnaryOperator;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

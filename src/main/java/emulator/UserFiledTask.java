@@ -1,7 +1,9 @@
 package emulator;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @Author: wenTaoDong
@@ -10,9 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Version 1.0
  */
 public class UserFiledTask extends Thread implements AbstractTask{
-    private Field field;
+    private volatile Field field;
     private List<Object> userData;
-    private AtomicInteger counter = new AtomicInteger(0);;
+    private AtomicInteger counter = new AtomicInteger(0);
+
 
     public AtomicInteger getCounter() {
         return counter;
@@ -49,24 +52,33 @@ public class UserFiledTask extends Thread implements AbstractTask{
     @Override
     public  synchronized void processField(Boolean isPositive) {
         List<Object> defaultValue = this.getUserData();
-
         int end = defaultValue.size();
         int start = counter.get();
         if (start < end ) {
-            this.field.setValue(defaultValue.get(counter.getAndIncrement()));
-            try {
-                Thread.sleep(this.field.getInterval());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+            this.field.valueQueue.add(defaultValue.get(counter.getAndIncrement()));
         }else {
             counter.set(0);
+        }
+        try {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
 
     @Override
-    public Object getValue() {
-        return this.getField().getValue();
+    public Object getValue()  {
+        Object value = null;
+        try {
+            value = this.getField().getValueQueue().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (value == null) {
+            return new Object();
+        }
+        return value;
     }
 }

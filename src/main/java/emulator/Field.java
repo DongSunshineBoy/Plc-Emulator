@@ -1,5 +1,9 @@
 package emulator;
 
+import java.text.NumberFormat;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * @Author: wenTaoDong
  * @Date: 2022/3/29 03-29 21:03
@@ -11,8 +15,25 @@ public class Field {
     private volatile Object startValue;
     private volatile Object endValue;
     private volatile Integer interval;
-    private  Object defaultValue;
+    private volatile Object defaultValue;
     private volatile Object offset;
+
+    //数值格式化
+    public NumberFormat numberFormat = NumberFormat.getInstance();
+    //阻塞队列使用该队列保证消息实时性
+    public  final BlockingQueue<Object> valueQueue = new LinkedBlockingQueue<Object>();
+
+    public Object getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(Object defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public BlockingQueue<Object> getValueQueue() {
+        return valueQueue;
+    }
 
     public boolean getPositive() {
         return isPositive;

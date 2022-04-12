@@ -21,6 +21,18 @@ public class CommonUtils {
     private final static String USER = "user";
 
 
+    public static Integer getMaxDecimalBit(Double... doubles) {
+        int maxBit = 0;
+        for (int i = 0; i < doubles.length; i++) {
+            String value =  doubles[i].toString();
+            int bitLength = value.substring(value.indexOf(".")).length() - 1;
+            if (bitLength > maxBit) {
+                maxBit = bitLength;
+            }
+        }
+        return maxBit;
+    }
+
     public static String getFunctionName(String functionParams) {
 
         if (!verifyUserParam(functionParams)) {
@@ -125,6 +137,7 @@ public class CommonUtils {
         return specialType;
     }
 
+
     public static boolean isFloat(String val) {
         if (val == null || val.isEmpty()) return false;
         if (isDecimal(val)) {
@@ -147,7 +160,7 @@ public class CommonUtils {
 
 
 
-    private static boolean isShort(String val) {
+    public static boolean isShort(String val) {
         if (val == null || val.isEmpty()) return false;
         if (isNumeric(val) && !isDecimal(val)) {
             verifyBound(val);
@@ -171,7 +184,7 @@ public class CommonUtils {
         }
     }
 
-    private static boolean isInteger(String val) {
+    public static boolean isInteger(String val) {
         if (val == null || val.isEmpty()) return false;
         if (isNumeric(val) && !isDecimal(val)) {
             verifyBound(val);
@@ -193,7 +206,7 @@ public class CommonUtils {
                return (T)Long.valueOf(val);
             }
         }
-        return null;
+        return (T) new Object();
     }
 
     public static boolean isLong(String val) {

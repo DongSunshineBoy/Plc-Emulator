@@ -8,6 +8,7 @@ package emulator;
  */
 public enum ExceptionEnum {
 
+    INPUT_VALUE_UNAVALIABLE("输入的数值无效,请检查你的数值范围!"),
     VALUE_TOO_LONG("输入的数值超出了指定的范围!"),
     NOT_FOUND_FUNCTION_EXCEPTION("输入的函数名称不在给定范围!"),
     NOT_FOUND_FORMATION("输入的函数格式不正确!"),

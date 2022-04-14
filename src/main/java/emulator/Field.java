@@ -20,8 +20,6 @@ public class Field {
 
     //数值格式化
     public NumberFormat numberFormat = NumberFormat.getInstance();
-    //阻塞队列使用该队列保证消息实时性
-    public  final BlockingQueue<Object> valueQueue = new LinkedBlockingQueue<Object>();
 
     public Object getDefaultValue() {
         return defaultValue;
@@ -29,10 +27,6 @@ public class Field {
 
     public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    public BlockingQueue<Object> getValueQueue() {
-        return valueQueue;
     }
 
     public boolean getPositive() {

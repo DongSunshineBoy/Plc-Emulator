@@ -39,7 +39,7 @@ public class RandomFieldTask extends Thread implements AbstractTask {
             e.printStackTrace();
         }
         int random = (int) (Math.random() * 2) + 1;
-        this.field.valueQueue.add(random != 1);
+        this.field.setValue(random != 1);
     }
 
 
@@ -80,7 +80,7 @@ public class RandomFieldTask extends Thread implements AbstractTask {
                     int min = Integer.parseInt(startValue);
                     max  = Math.max(max, min);
                     short value = (short) ((short) ThreadLocalRandom.current().nextInt(min, max + 1) & 0x7FFF);
-                    this.field.valueQueue.add(value);
+                    this.field.setValue(value);
 
 
                 }else if(isInteger){
@@ -90,7 +90,7 @@ public class RandomFieldTask extends Thread implements AbstractTask {
                     max  = Math.max(max, min);
                     int value = ThreadLocalRandom.current().nextInt(min, max + 1);
 
-                    this.field.valueQueue.add(value);
+                    this.field.setValue(value);
 
                 }else {
 
@@ -98,9 +98,7 @@ public class RandomFieldTask extends Thread implements AbstractTask {
                     long min = Long.parseLong(startValue);
                     max  = Math.max(max, min);
                     long value = ThreadLocalRandom.current().nextLong(max - min) + min;
-
-                    this.field.valueQueue.add(value);
-
+                    this.field.setValue(value);
                 }
 
             }else {
@@ -112,7 +110,7 @@ public class RandomFieldTask extends Thread implements AbstractTask {
 
                 double formatValue = Double.parseDouble(this.field.numberFormat.format(value));
 
-                this.field.valueQueue.add(formatValue);
+                this.field.setValue(formatValue);
             }
 
             try {
@@ -125,16 +123,7 @@ public class RandomFieldTask extends Thread implements AbstractTask {
 
     @Override
     public Object getValue()  {
-        Object value = null;
-        try {
-            value = this.getField().getValueQueue().take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (value == null) {
-            return new Object();
-        }
-        return value;
+        return this.field.getValue();
     }
 
 }

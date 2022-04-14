@@ -55,13 +55,12 @@ public class UserFiledTask extends Thread implements AbstractTask{
         int end = defaultValue.size();
         int start = counter.get();
         if (start < end ) {
-
-            this.field.valueQueue.add(defaultValue.get(counter.getAndIncrement()));
+            this.field.setValue(defaultValue.get(counter.getAndIncrement()));
         }else {
             counter.set(0);
         }
         try {
-            TimeUnit.MILLISECONDS.sleep(1000);
+            TimeUnit.MILLISECONDS.sleep(field.getInterval());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -70,15 +69,6 @@ public class UserFiledTask extends Thread implements AbstractTask{
 
     @Override
     public Object getValue()  {
-        Object value = null;
-        try {
-            value = this.getField().getValueQueue().take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (value == null) {
-            return new Object();
-        }
-        return value;
+        return this.field.getValue();
     }
 }

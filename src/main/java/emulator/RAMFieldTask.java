@@ -15,8 +15,6 @@ public class RAMFieldTask extends Thread implements AbstractTask {
 
     private Field field;
 
-
-
     public Field getField() {
         return field;
     }
@@ -25,10 +23,14 @@ public class RAMFieldTask extends Thread implements AbstractTask {
         this.field = field;
     }
 
-
     @Override
-    public void run() {
+    public synchronized void run() {
         while (true) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(field.getInterval());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
            this.processField(this.field.isPositive);
         }
 
@@ -51,32 +53,57 @@ public class RAMFieldTask extends Thread implements AbstractTask {
             Long defaultValue = Long.valueOf(this.field.getValue().toString());
             Long endValue = Long.valueOf(this.field.getEndValue().toString());
 
-            Long value = Long.valueOf(this.field.getValue().toString());
             Long offset = Long.valueOf(this.field.getOffset().toString());
-            long result = value + offset;
+
+            if (startValue > endValue && offset < 0) {
+                if (defaultValue <= endValue) {
+                    defaultValue = Long.parseLong(this.field.getStartValue().toString());
+                }
+            }
+
+            if (startValue < endValue && offset > 0) {
+                if (defaultValue >= endValue) {
+                    defaultValue = Long.parseLong(this.field.getStartValue().toString());
+                }
+            }
+
+            long result = defaultValue + offset;
 
             Object resultValue = CommonUtils.getObjectType(Long.toString(result));
 
             verifyOffsetArguments(startValue, endValue, offset);
 
-            this.field.valueQueue.add(resultValue);
-
             if (startValue > endValue && offset < 0) {
-
-                if (defaultValue <= endValue) {
-                    this.field.valueQueue.add(this.getField().getStartValue());
+                if (result >= endValue){
+                    this.field.setValue(resultValue);
                 }
-            }else {
-                if (defaultValue >= endValue) {
-                    this.field.valueQueue.add(this.getField().getStartValue());
+            }
+
+            if (startValue < endValue && offset > 0) {
+                if (result <= endValue){
+                    this.field.setValue(resultValue);
                 }
             }
 
         }else {
+
             Double offset = Double.parseDouble(this.field.getOffset().toString());
             Double endValue = Double.parseDouble(this.field.getEndValue().toString());
-            Double startValue = Double.parseDouble(this.getField().getStartValue().toString());
+            Double startValue = Double.parseDouble(this.field.getStartValue().toString());
             Double defaultValue = Double.parseDouble(this.field.getValue().toString());
+
+
+            if (startValue > endValue && offset < 0) {
+                if (defaultValue <= endValue) {
+                    defaultValue = Double.parseDouble(this.field.getStartValue().toString());
+                }
+            }
+
+            if (startValue < endValue && offset > 0) {
+                if (defaultValue >= endValue) {
+                    defaultValue = Double.parseDouble(this.field.getStartValue().toString());
+                }
+            }
 
             //取最大的小数位数作为保留计算完后的结果位数
             Integer maxDecimalBit = CommonUtils.getMaxDecimalBit(offset, endValue, startValue);
@@ -84,41 +111,32 @@ public class RAMFieldTask extends Thread implements AbstractTask {
 
             verifyOffsetArguments(startValue, endValue, offset);
 
-            Double value = Double.valueOf(this.field.numberFormat.format(defaultValue + offset));
-            this.field.setValue(value);
-            this.field.valueQueue.add(value);
+            double result = defaultValue + offset;
 
-            if (startValue > endValue && offset < 0) {
-                if (defaultValue <= endValue) {
-                    this.field.setValue(this.getField().getStartValue());
-                    this.field.valueQueue.add(this.getField().getStartValue());
+            Double value = Double.valueOf(this.field.numberFormat.format(result));
+
+            if (value > endValue && offset < 0) {
+                if (result <= endValue){
+                    this.field.setValue(this.field.getStartValue());
+                }else {
+                    this.field.setValue(value);
                 }
-            }else {
-                if (defaultValue >= endValue) {
-                    this.field.setValue(this.getField().getStartValue());
-                    this.field.valueQueue.add(this.getField().getStartValue());
+            }
+
+            if (value < endValue && offset > 0) {
+                if (result >= endValue){
+                    this.field.setValue(this.field.getStartValue());
+                }else {
+                    this.field.setValue(value);
                 }
             }
         }
-        try {
-            TimeUnit.MILLISECONDS.sleep(field.getInterval());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
     public Object getValue()  {
-        Object value = null;
-        try {
-            value = this.getField().getValueQueue().take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (value == null) {
-            return new Object();
-        }
-        return value;
+        return this.field.getDefaultValue();
     }
 
 }

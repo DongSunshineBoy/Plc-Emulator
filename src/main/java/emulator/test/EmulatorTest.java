@@ -25,6 +25,11 @@ public class EmulatorTest {
                 while (true) {
                     Object value = task.getValue();
                     System.out.println(task.getClass() + "value = " + value);
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
             }
         });
 
@@ -57,6 +62,11 @@ public class EmulatorTest {
                 while (true) {
                     Object value = task.getValue();
                     System.out.println(task.getValue().getClass()+"value = " + value);
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
         });
 
@@ -70,6 +80,11 @@ public class EmulatorTest {
                 while (true) {
                     Object value = task.getValue();
                     System.out.println(value.getClass()+"value = " + value);
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
         });
@@ -79,14 +94,19 @@ public class EmulatorTest {
 
     public void testRAMPNegative() {
 
-        String userParams = "ramp(1000,50.2,12,-2)";
+        String userParams = "ramp(1000,2,15,3.1)";
         AbstractTask task = emulatorFactory.builder(userParams);
         executor.execute(()->{
                 while (true) {
                     Object value = task.getValue();
                     System.out.println(task.getClass().getName()+"value = " + value);
-
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
         });
     }
 
@@ -99,7 +119,11 @@ public class EmulatorTest {
 
                     Object value = task.getValue();
                     System.out.println(value.getClass()+"value = " + value);
-
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
             }
 
         });
